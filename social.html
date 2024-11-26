@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Anxiety Test</title>
+    <link rel="stylesheet" href="soc.css">
+</head>
+<body>
+    <div class="container">
+        <div id="test-section">
+            <h1>Social Anxiety Test</h1>
+            <p class="instructions">Over the past few weeks, how often have you experienced the following issues related to social anxiety?</p>
+            <form id="social-anxiety-test-form" onsubmit="handleSubmit(event)">
+                <!-- JavaScript will generate questions here, including the submit button after the 9th question -->
+            </form>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <div id="score-summary"></div>
+            <div id="score-details"></div>
+            <div id="score-info">
+                <h2>About Your Score</h2>
+                <p>Each answer has a score of 0-3. Adding these provides your Total Score.</p>
+                <p><strong>Not at all = 0; Several days = 1; More than half the days = 2; Nearly every day = 3</strong></p>
+            
+                <h3>Interpreting Your Total Score</h3>
+                <ul>
+                    <li><strong>1-4:</strong> Minimal social anxiety</li>
+                    <li><strong>5-9:</strong> Mild social anxiety</li>
+                    <li><strong>10-14:</strong> Moderate social anxiety</li>
+                    <li><strong>15-19:</strong> Moderately severe social anxiety</li>
+                    <li><strong>20-27:</strong> Severe social anxiety</li>
+                </ul>
+            </div>
+
+            <div class="result-box">
+                <h2>Your Social Anxiety Level: <span id="social-anxiety-level">Moderate</span></h2>
+                <p id="social-anxiety-recommendation">Consider adopting relaxation techniques like deep breathing and practicing social situations gradually to build confidence.</p>
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions for You</h2>
+                <ul>
+                    <li><strong>Joke of the Day:</strong> <span id="joke">I asked the librarian if the library had any books on paranoia. She whispered, “They’re right behind you.”</span></li>
+                    <li><strong>Read a Positive Quote:</strong> <span id="quote">"In the middle of difficulty lies opportunity." – Albert Einstein</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Do you avoid social situations due to fear of being judged?",
+            "Do you often feel anxious or nervous in social gatherings?",
+            "Do you worry excessively about saying the wrong thing in conversations?",
+            "Do you fear that people are looking at you or judging you negatively?",
+            "Do you avoid meeting new people due to anxiety?",
+            "Do you feel physically uncomfortable or nervous when speaking in front of others?",
+            "Do you feel self-conscious when you’re the center of attention?",
+            "Do you fear being embarrassed or humiliated in public?",
+            "Do you feel tense or stressed when you have to interact with strangers?"
+        ];
+
+        const options = [
+            { value: 0, text: "Not at all" },
+            { value: 1, text: "Several days" },
+            { value: 2, text: "More than half the days" },
+            { value: 3, text: "Nearly every day" }
+        ];
+
+        function loadQuestions() {
+            const form = document.getElementById("social-anxiety-test-form");
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                
+                questionDiv.innerHTML = `<p>${index + 1}. ${question}</p>`;
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+
+                options.forEach(option => {
+                    optionsDiv.innerHTML += `
+                        <input type="radio" name="q${index + 1}" value="${option.value}" id="q${index + 1}_${option.value}" required>
+                        <label for="q${index + 1}_${option.value}">${option.text}</label>
+                    `;
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                form.appendChild(questionDiv);
+            });
+
+            const submitButton = document.createElement("button");
+            submitButton.type = "submit";
+            submitButton.classList.add("submit-button");
+            submitButton.textContent = "Submit";
+            form.appendChild(submitButton);
+        }
+
+        function displaySocialAnxietyResult(score) {
+            const anxietyLevel = document.getElementById("social-anxiety-level");
+            const anxietyRecommendation = document.getElementById("social-anxiety-recommendation");
+            const joke = document.getElementById("joke");
+            const quote = document.getElementById("quote");
+
+            let levelText = "";
+            let recommendationText = "";
+            let jokeText = "";
+            let quoteText = "";
+
+            if (score >= 1 && score <= 4) {
+                levelText = "Minimal";
+                recommendationText = "Your social anxiety seems to be minimal. Keep practicing positive self-talk and engaging in small social situations to boost confidence. Staying connected with others can continue to help you grow comfortable in social settings.";
+                jokeText = "I used to play piano by ear, but now I use my hands!";
+                quoteText = "\"The only way to do great work is to love what you do.\" – Steve Jobs";
+            } else if (score >= 5 && score <= 9) {
+                levelText = "Mild";
+                recommendationText = "It looks like you might experience occasional discomfort in social situations. Try exposing yourself to more social interactions in a gradual and supportive environment. Positive experiences can reduce anxiety over time.";
+                jokeText = "What did the ocean say to the beach? Nothing, it just waved!";
+                quoteText = "\"You are braver than you believe, stronger than you seem, and smarter than you think.\" – A.A. Milne";
+            } else if (score >= 10 && score <= 14) {
+                levelText = "Moderate";
+                recommendationText = "Your social anxiety is moderate. It's helpful to focus on breathing exercises or grounding techniques to manage your anxiety. Gradually practicing social interactions in low-pressure environments can also help build confidence.";
+                jokeText = "I asked the librarian if the library had any books on paranoia. She whispered, 'They’re right behind you.'";
+                quoteText = "\"The best way to predict the future is to create it.\" – Peter Drucker";
+            } else if (score >= 15 && score <= 19) {
+                levelText = "Moderately Severe";
+                recommendationText = "Your social anxiety seems to be quite impactful. Consider seeking professional support, such as therapy, to explore strategies to manage these feelings. Working on your self-esteem and practicing relaxation exercises can also help.";
+                jokeText = "Why don’t skeletons fight each other? They don’t have the guts!";
+                quoteText = "\"Believe you can and you're halfway there.\" – Theodore Roosevelt";
+            } else if (score >= 20 && score <= 27) {
+                levelText = "Severe";
+                recommendationText = "Your social anxiety may be affecting your quality of life significantly. It's very important to seek professional help. Therapy and support groups can help you navigate and reduce social anxiety in a safe, structured environment.";
+                jokeText = "I tried to start a band called 1023MB. We haven’t got a gig yet.";
+                quoteText = "\"You are never too old to set another goal or to dream a new dream.\" – C.S. Lewis";
+            }
+
+            anxietyLevel.textContent = levelText;
+            anxietyRecommendation.textContent = recommendationText;
+            joke.textContent = jokeText;
+            quote.textContent = quoteText;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let details = '';
+            const formElements = event.target.elements;
+
+            questions.forEach((_, i) => {
+                const selectedOption = formElements[`q${i + 1}`].value;
+                totalScore += parseInt(selectedOption);
+                details += `<p>Q${i + 1}: ${selectedOption}</p>`;
+            });
+
+            document.getElementById("test-section").classList.add("hidden");
+            document.getElementById("results-section").classList.remove("hidden");
+            document.getElementById("score-summary").innerText = `Your total score is: ${totalScore}`;
+            document.getElementById("score-details").innerHTML = details;
+
+            displaySocialAnxietyResult(totalScore);
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>

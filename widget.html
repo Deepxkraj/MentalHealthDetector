@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercise Widget</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+        }
+
+        .widget-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            background: #1c1c1e;
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .instruction {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #67d4a7;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Breathing animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Timer countdown */
+        .countdown {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #a0a0a0;
+        }
+
+        /* Start/Stop button */
+        .control-btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            color: #ccc;
+            background: transparent;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .control-btn:hover {
+            background: #333;
+            color: white;
+        }
+
+        .control-btn.stop {
+            background-color: #d9534f;
+            border-color: #d9534f;
+        }
+
+        .control-btn.stop:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <div class="instruction" id="instruction">Breathe In</div>
+    <div class="circle-container">
+        <div class="timer" id="timer">3</div>
+    </div>
+    <div class="countdown" id="countdown">03:00</div>
+    <button class="control-btn" id="startStopButton" onclick="toggleBreathing()">Start</button>
+</div>
+
+<script>
+    let timerInterval;
+    let countdownInterval;
+    let isBreathing = false;
+    let totalTime = 180000; // 3 minutes in milliseconds
+    let breatheInTime = 3000; // 3 seconds for each breath in
+    let breatheOutTime = 3000; // 3 seconds for each breath out
+    let holdTime = 3000; // 3 seconds for holding breath
+
+    function toggleBreathing() {
+        if (isBreathing) {
+            stopBreathing();
+        } else {
+            startBreathing();
+        }
+    }
+
+    function startBreathing() {
+        isBreathing = true;
+        document.getElementById("startStopButton").textContent = "Stop";
+        let remainingTime = totalTime;
+
+        countdownInterval = setInterval(() => {
+            remainingTime -= 1000;
+            document.getElementById("countdown").textContent = formatTime(remainingTime);
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                stopBreathing();
+            }
+        }, 1000);
+
+        breathingCycle();
+    }
+
+    function stopBreathing() {
+        isBreathing = false;
+        document.getElementById("startStopButton").textContent = "Start";
+        clearInterval(timerInterval);
+        clearInterval(countdownInterval);
+        document.getElementById("instruction").textContent = "Exercise Finished";
+        document.getElementById("timer").textContent = "0";
+        document.getElementById("countdown").textContent = "00:00";
+    }
+
+    function breathingCycle() {
+        let cycleTime = 0;
+        timerInterval = setInterval(() => {
+            if (cycleTime < breatheInTime) {
+                document.getElementById("instruction").textContent = "Breathe In";
+                document.getElementById("timer").textContent = (breatheInTime / 1000) - Math.floor(cycleTime / 1000);
+            } else if (cycleTime < breatheInTime + holdTime) {
+                document.getElementById("instruction").textContent = "Hold Breath";
+                document.getElementById("timer").textContent = (holdTime / 1000) - Math.floor((cycleTime - breatheInTime) / 1000);
+            } else if (cycleTime < breatheInTime + holdTime + breatheOutTime) {
+                document.getElementById("instruction").textContent = "Breathe Out";
+                document.getElementById("timer").textContent = (breatheOutTime / 1000) - Math.floor((cycleTime - breatheInTime - holdTime) / 1000);
+            }
+
+            cycleTime += 1000;
+
+            if (cycleTime >= breatheInTime + holdTime + breatheOutTime) {
+                cycleTime = 0; // Reset cycle time and repeat
+            }
+        }, 1000);
+    }
+
+    function formatTime(ms) {
+        const minutes = String(Math.floor(ms / 60000)).padStart(2, '0');
+        const seconds = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+        return `${minutes}:${seconds}`;
+    }
+</script>
+
+</body>
+</html>

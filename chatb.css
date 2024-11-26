@@ -1,0 +1,131 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #e5ddd5;
+    height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    height: 85vh;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header styling */
+.chat-header {
+    background-color: #075E54;
+    color: #ffffff;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.chat-header p {
+    margin: 0;
+    font-size: 12px;
+    color: #d0e0dd;
+}
+
+/* Chat container styling */
+.chat-container {
+    flex-grow: 1;
+    padding: 10px 15px;
+    background-color: #e5ddd5;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.options-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+}
+
+.message {
+    padding: 10px 15px;
+    margin: 6px 0;
+    border-radius: 8px;
+    max-width: 70%;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bot-message {
+    background-color: #ffffff;
+    color: #333;
+    align-self: flex-start;
+    text-align: left;
+    border-radius: 8px 8px 8px 0;
+}
+
+.user-message {
+    background-color: #dcf8c6;
+    color: #333;
+    align-self: flex-end;
+    text-align: left;
+    border-radius: 8px 8px 0 8px;
+}
+
+.option-button {
+    padding: 8px 12px;
+    background-color: #25d366;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.option-button:hover {
+    background-color: #20b058;
+}
+
+/* Scrollbar styling */
+.chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}

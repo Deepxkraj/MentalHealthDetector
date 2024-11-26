@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depression Test</title>
+    <link rel="stylesheet" href="dep.css">
+</head>
+<body>
+    <div class="container">
+        <div id="test-section">
+            <h1>Depression Test</h1>
+            <p class="instructions">Over the last 2 weeks, how often have you been bothered by the following problems?</p>
+            <form id="depression-test-form" onsubmit="handleSubmit(event)">
+                <!-- JavaScript will generate questions here, including the submit button after the 9th question -->
+            </form>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <div id="score-summary"></div>
+            <div id="score-details"></div>
+            <div id="score-info">
+                <h2>About your score</h2>
+                <p>Each of your answers has a score of 0-3. Adding these up provides your Total Score.</p>
+                <p><strong>Not at all = 0; Several days = 1; More than half the days = 2; Nearly every day = 3</strong></p>
+                <h3>Interpreting your Total Score</h3>
+                <ul>
+                    <li><strong>1-4:</strong> Minimal depression</li>
+                    <li><strong>5-9:</strong> Mild depression</li>
+                    <li><strong>10-14:</strong> Moderate depression</li>
+                    <li><strong>15-19:</strong> Moderately severe depression</li>
+                    <li><strong>20-27:</strong> Severe depression</li>
+                </ul>
+            </div>
+
+            <!-- Mental Health Result Section Start -->
+            <div class="result-box">
+                <h2>Your Mental Health Status: <span id="mental-status">Moderate</span></h2>
+                <p id="status-level">Based on your answers, your mental health status appears to be manageable. We recommend taking some time to relax and focus on self-care.</p>
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions for You</h2>
+                <ul>
+                    <li><strong>Joke of the Day:</strong> <span id="joke">Why don’t scientists trust atoms? Because they make up everything!</span></li>
+                    <li><strong>Read a Positive Quote:</strong> <span id="quote">"Believe you can and you're halfway there." – Theodore Roosevelt</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Little interest or pleasure in doing things",
+            "Feeling down, depressed, or hopeless",
+            "Trouble falling or staying asleep, or sleeping too much",
+            "Feeling tired or having little energy",
+            "Poor appetite or overeating",
+            "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+            "Trouble concentrating on things, such as reading the newspaper or watching television",
+            "Moving or speaking slowly so others could notice, or being fidgety/restless",
+            "Thoughts that you would be better off dead, or of hurting yourself"
+        ];
+
+        const options = [
+            { value: 0, text: "Not at all" },
+            { value: 1, text: "Several days" },
+            { value: 2, text: "More than half the days" },
+            { value: 3, text: "Nearly every day" }
+        ];
+
+        function loadQuestions() {
+            const form = document.getElementById("depression-test-form");
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                
+                questionDiv.innerHTML = `<p>${index + 1}. ${question}</p>`;
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+
+                options.forEach(option => {
+                    optionsDiv.innerHTML += `
+                        <input type="radio" name="q${index + 1}" value="${option.value}" id="q${index + 1}_${option.value}" required>
+                        <label for="q${index + 1}_${option.value}">${option.text}</label>
+                    `;
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                form.appendChild(questionDiv);
+            });
+
+            const submitButton = document.createElement("button");
+            submitButton.type = "submit";
+            submitButton.classList.add("submit-button");
+            submitButton.textContent = "Submit";
+            form.appendChild(submitButton);
+        }
+
+        function displayMentalHealthResult(score) {
+            const mentalStatus = document.getElementById("mental-status");
+            const statusLevel = document.getElementById("status-level");
+            const joke = document.getElementById("joke");
+            const quote = document.getElementById("quote");
+
+            let statusText = "";
+            let recommendation = "";
+            let jokesArray = [];
+            let quoteText = "";
+
+            if (score >= 1 && score <= 4) {
+        statusText = "Minimal";
+        recommendation = "Your mental health is in a good place, which is wonderful! Keep nurturing this balance by doing activities that bring you joy and fulfillment. Stay connected with friends and family, as social support is essential for continued well-being. Remember, even small acts of self-care can make a difference. Maintain this positivity by setting aside time for relaxation and hobbies.";
+        jokesArray = [
+            "Why did the scarecrow win an award? Because he was outstanding in his field!",
+            "How does the ocean say hi? It waves!",
+            "Why did the golfer bring two pairs of pants? In case he got a hole in one!"
+        ];
+        quoteText = "\"Happiness is not by chance, but by choice.\" – Jim Rohn";
+    } else if (score >= 5 && score <= 9) {
+        statusText = "Mild";
+        recommendation = "It seems you're feeling a bit low, which is entirely normal from time to time. Consider engaging in activities that you find relaxing or enjoyable, like listening to music, reading, or spending time outdoors. Connecting with loved ones can also lift your spirits. Practicing gratitude or keeping a journal might help you focus on the positives. Remember, small steps can make a big difference.";
+        jokesArray = [
+            "Why don’t some couples go to the gym? Because some relationships don’t work out!",
+            "What did the left eye say to the right eye? Between us, something smells.",
+            "Why don’t skeletons fight each other? They don’t have the guts."
+        ];
+        quoteText = "\"Every day may not be good... but there’s something good in every day.\" – Alice Morse Earle";
+    } else if (score >= 10 && score <= 14) {
+        statusText = "Moderate";
+        recommendation = "You might be experiencing some challenges, which can be tiring. Take some time for yourself to recharge by engaging in self-care activities, whether that’s exercise, mindfulness, or spending time with friends. Establishing a routine and setting small goals can help manage stress. Prioritizing self-care now can prevent these feelings from intensifying. It’s okay to take things one day at a time.";
+        jokesArray = [
+            "Why don’t scientists trust atoms? Because they make up everything!",
+            "I told my wife she was drawing her eyebrows too high. She looked surprised.",
+            "What’s orange and sounds like a parrot? A carrot!"
+        ];
+        quoteText = "\"Believe you can and you're halfway there.\" – Theodore Roosevelt";
+    } else if (score >= 15 && score <= 19) {
+        statusText = "Moderately severe";
+        recommendation = "It looks like you're facing some significant challenges. Consider talking to a trusted friend, family member, or counselor—they can offer valuable support. Taking care of yourself through good sleep, nutrition, and exercise can also be helpful. Engaging in activities you enjoy can provide some relief. Remember, seeking help is a strength, not a weakness. Taking action now can make a big difference.";
+        jokesArray = [
+            "Why was the math book sad? Because it had too many problems.",
+            "Why don’t eggs tell jokes? Because they might crack up!",
+            "Did you hear about the Italian chef that died? He pasta way."
+        ];
+        quoteText = "\"It’s okay to not be okay, as long as you’re not giving up.\" – Karen Salmansohn";
+    } else if (score >= 20 && score <= 27) {
+        statusText = "Severe";
+        recommendation = "You might be experiencing significant difficulties that are affecting your well-being. It’s very important to reach out for professional help, as talking to a therapist or counselor can provide guidance and support. Surrounding yourself with supportive people can also make a difference. You don’t have to face this alone—help is available, and many have found relief with the right support. Taking the first step toward help is an act of courage.";
+        jokesArray = [
+            "What did one wall say to the other? 'I’ll meet you at the corner!'",
+            "Why was the broom late? It swept right past its alarm!",
+            "How does a penguin build its house? Igloos it together!"
+        ];
+        quoteText = "\"You don’t have to control your thoughts. You just have to stop letting them control you.\" – Dan Millman";
+    }
+
+            mentalStatus.textContent = statusText;
+            statusLevel.textContent = recommendation;
+            joke.textContent = jokesArray;
+            quote.textContent = quoteText;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let details = '';
+            const formElements = event.target.elements;
+
+            questions.forEach((_, i) => {
+                const selectedOption = formElements[`q${i + 1}`].value;
+                totalScore += parseInt(selectedOption);
+                details += `<p>Q${i + 1}: ${selectedOption}</p>`;
+            });
+
+            document.getElementById("test-section").classList.add("hidden");
+            document.getElementById("results-section").classList.remove("hidden");
+            document.getElementById("score-summary").innerText = `Your total score is: ${totalScore}`;
+            document.getElementById("score-details").innerHTML = details;
+
+            displayMentalHealthResult(totalScore);
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>

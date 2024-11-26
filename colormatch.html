@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Match Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            flex-direction: column;
+        }
+        #game-container {
+            display: none;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tile {
+            width: 100px;
+            height: 100px;
+            background-color: #bbb;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: transparent;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .matched {
+            background-color: #4CAF50 !important;
+            color: #fff !important;
+            cursor: default;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        #end-message {
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container"></div>
+
+<div id="end-message">
+    <h2>Congratulations! You matched all colors!</h2>
+    <div class="button-container">
+        <button class="button" onclick="startGame()">Retry</button>
+        <button class="button" onclick="finishGame()">Finish</button>
+    </div>
+</div>
+
+<div class="button-container">
+    <button id="start-button" class="button" onclick="startGame()">Start Game</button>
+</div>
+
+<script>
+    let colors = ["#FF6347", "#FFD700", "#ADFF2F", "#20B2AA", "#FF6347", "#FFD700", "#ADFF2F", "#20B2AA", "#7B68EE", "#FF69B4", "#7B68EE", "#FF69B4", "#FFA07A", "#00FA9A", "#FFA07A", "#00FA9A"];
+    let tiles = [];
+    let firstTile, secondTile;
+    let lockBoard = false;
+    let matchedPairs = 0;
+
+    function shuffleColors() {
+        colors.sort(() => Math.random() - 0.5);
+    }
+
+    function startGame() {
+        document.getElementById("game-container").innerHTML = '';
+        document.getElementById("end-message").style.display = 'none';
+        document.getElementById("game-container").style.display = 'grid';
+        document.getElementById("start-button").style.display = 'none';
+        shuffleColors();
+        tiles = [];
+        matchedPairs = 0;
+
+        // Create tiles
+        for (let i = 0; i < colors.length; i++) {
+            const tile = document.createElement("div");
+            tile.classList.add("tile");
+            tile.dataset.color = colors[i];
+            tile.onclick = flipTile;
+            document.getElementById("game-container").appendChild(tile);
+            tiles.push(tile);
+        }
+        firstTile = secondTile = null;
+        lockBoard = false;
+    }
+
+    function flipTile() {
+        if (lockBoard || this === firstTile || this.classList.contains("matched")) return;
+
+        this.style.backgroundColor = this.dataset.color;
+        this.style.color = "#fff";
+
+        if (!firstTile) {
+            firstTile = this;
+        } else {
+            secondTile = this;
+            checkForMatch();
+        }
+    }
+
+    function checkForMatch() {
+        if (firstTile.dataset.color === secondTile.dataset.color) {
+            firstTile.classList.add("matched");
+            secondTile.classList.add("matched");
+            matchedPairs++;
+            resetBoard();
+
+            if (matchedPairs === colors.length / 2) {
+                endGame();
+            }
+        } else {
+            lockBoard = true;
+            setTimeout(() => {
+                firstTile.style.backgroundColor = "#bbb";
+                firstTile.style.color = "transparent";
+                secondTile.style.backgroundColor = "#bbb";
+                secondTile.style.color = "transparent";
+                resetBoard();
+            }, 800);
+        }
+    }
+
+    function resetBoard() {
+        [firstTile, secondTile] = [null, null];
+        lockBoard = false;
+    }
+
+    function endGame() {
+        document.getElementById("game-container").style.display = 'none';
+        document.getElementById("end-message").style.display = 'block';
+    }
+
+    function finishGame() {
+        alert("Thank you for playing!");
+        document.getElementById("end-message").style.display = 'none';
+        document.getElementById("start-button").style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

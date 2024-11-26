@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .test-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .test-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .test-box h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .test-box p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .test-box .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .test-box .button:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Mental Health Tests</h1>
+    <p>Take a test to assess your mental well-being</p>
+</header>
+
+<div class="container">
+    <!-- Test 1 -->
+    <div class="test-box">
+        <h2>Depression Test</h2>
+        <p>Assess your current emotional state and identify symptoms of depression.</p>
+        <button class="button" onclick="location.href='depression.html'">Take Test</button>
+    </div>
+
+    <!-- Test 2 -->
+    <div class="test-box">
+        <h2>Anxiety Test</h2>
+        <p>Identify symptoms of anxiety and assess your mental well-being.</p>
+        <button class="button" onclick="location.href='anxiety.html'">Take Test</button>
+    </div>
+
+    <!-- Test 3 -->
+    <div class="test-box">
+        <h2>Stress Test</h2>
+        <p>Evaluate the level of stress you're experiencing and its effects.</p>
+        <button class="button" onclick="location.href='stress.html'">Take Test</button>
+    </div>
+
+    <!-- Test 4 -->
+    <div class="test-box">
+        <h2>Sleep Quality Test</h2>
+        <p>Assess your sleep patterns and their impact on your mental health.</p>
+        <button class="button" onclick="location.href='sleep.html'">Take Test</button>
+    </div>
+
+    <!-- Test 5 -->
+    <div class="test-box">
+        <h2>Addiction Test</h2>
+        <p>Assess your relationship with addictive behaviors and substances.</p>
+        <button class="button" onclick="location.href='addiction.html'">Take Test</button>
+    </div>
+    
+
+    <!-- Test 6 -->
+    <div class="test-box">
+        <h2>Social Anxiety Test</h2>
+        <p>Identify symptoms of social anxiety and assess your social interactions.</p>
+        <button class="button" onclick="location.href='social.html'">Take Test</button>
+    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 Mental Health Resources. All rights reserved.</p>
+</div>
+
+</body>
+</html>

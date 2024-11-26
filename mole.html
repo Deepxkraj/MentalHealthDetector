@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Mole Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            flex-direction: column;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 15px;
+            display: none;
+        }
+        .mole {
+            width: 100px;
+            height: 100px;
+            background-color: #8B4513;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .mole.active {
+            background-color: #FFD700;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        #score-board {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        #end-message {
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="score-board">Score: 0</div>
+
+<div id="game-board">
+    <div class="mole" onclick="whackMole(0)"></div>
+    <div class="mole" onclick="whackMole(1)"></div>
+    <div class="mole" onclick="whackMole(2)"></div>
+    <div class="mole" onclick="whackMole(3)"></div>
+    <div class="mole" onclick="whackMole(4)"></div>
+    <div class="mole" onclick="whackMole(5)"></div>
+    <div class="mole" onclick="whackMole(6)"></div>
+    <div class="mole" onclick="whackMole(7)"></div>
+    <div class="mole" onclick="whackMole(8)"></div>
+</div>
+
+<div id="end-message">
+    <h2>Time's up! Final Score: <span id="final-score"></span></h2>
+    <div class="button-container">
+        <button class="button" onclick="startGame()">Play Again</button>
+        <button class="button" onclick="finishGame()">Finish</button>
+    </div>
+</div>
+
+<div class="button-container">
+    <button id="start-button" class="button" onclick="startGame()">Start Game</button>
+</div>
+
+<script>
+    let score = 0;
+    let activeMole = -1;
+    let gameInterval;
+    let countdown;
+    const gameDuration = 15000; // 15 seconds game time
+
+    function startGame() {
+        score = 0;
+        document.getElementById("score-board").innerText = `Score: ${score}`;
+        document.getElementById("game-board").style.display = "grid";
+        document.getElementById("end-message").style.display = "none";
+        document.getElementById("start-button").style.display = "none";
+
+        gameInterval = setInterval(showMole, 700);
+        countdown = setTimeout(endGame, gameDuration);
+    }
+
+    function showMole() {
+        if (activeMole >= 0) {
+            document.getElementsByClassName("mole")[activeMole].classList.remove("active");
+        }
+        activeMole = Math.floor(Math.random() * 9);
+        document.getElementsByClassName("mole")[activeMole].classList.add("active");
+    }
+
+    function whackMole(index) {
+        if (index === activeMole) {
+            score++;
+            document.getElementById("score-board").innerText = `Score: ${score}`;
+            document.getElementsByClassName("mole")[index].classList.remove("active");
+            activeMole = -1;
+        }
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        clearTimeout(countdown);
+        if (activeMole >= 0) {
+            document.getElementsByClassName("mole")[activeMole].classList.remove("active");
+            activeMole = -1;
+        }
+        document.getElementById("game-board").style.display = "none";
+        document.getElementById("final-score").innerText = score;
+        document.getElementById("end-message").style.display = "block";
+    }
+
+    function finishGame() {
+        alert("Thank you for playing!");
+        document.getElementById("end-message").style.display = "none";
+        document.getElementById("start-button").style.display = "block";
+    }
+</script>
+
+</body>
+</html>

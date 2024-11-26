@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anxiety Test</title>
+    <link rel="stylesheet" href="dep.css">
+</head>
+<body>
+    <div class="container">
+        <div id="test-section">
+            <h1>Anxiety Test</h1>
+            <p class="instructions">Over the last 2 weeks, how often have you been bothered by the following problems?</p>
+            <form id="anxiety-test-form" onsubmit="handleSubmit(event)">
+                <!-- JavaScript will generate questions here, including the submit button after the last question -->
+            </form>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <div id="score-summary"></div>
+            <div id="score-details"></div>
+            <div id="score-info">
+                <h2>About your score</h2>
+                <p>Each of your answers has a score of 0-3. Adding these up provides your Total Score.</p>
+                <p><strong>Not at all = 0; Several days = 1; More than half the days = 2; Nearly every day = 3</strong></p>
+            
+                <h3>Interpreting your Total Score</h3>
+                <ul>
+                    <li><strong>1-4:</strong> Minimal anxiety</li>
+                    <li><strong>5-9:</strong> Mild anxiety</li>
+                    <li><strong>10-14:</strong> Moderate anxiety</li>
+                    <li><strong>15-19:</strong> Moderately severe anxiety</li>
+                    <li><strong>20-27:</strong> Severe anxiety</li>
+                </ul>
+            </div>
+
+            <!-- Mental Health Result Section Start -->
+            <div class="result-box">
+                <h2>Your Mental Health Status: <span id="mental-status">Moderate</span></h2>
+                <p id="status-level">Based on your answers, your mental health status appears to be manageable. We recommend taking some time to relax and focus on self-care.</p>
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions for You</h2>
+                <ul>
+                    <li><strong>Joke of the Day:</strong> <span id="joke">Why don’t scientists trust atoms? Because they make up everything!</span></li>
+                    <li><strong>Motivational Quote:</strong> <span id="quote">"Believe you can and you're halfway there." – Theodore Roosevelt</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Feeling nervous, anxious, or on edge",
+            "Not being able to stop or control worrying",
+            "Worrying too much about different things",
+            "Trouble relaxing",
+            "Being so restless that it is hard to sit still",
+            "Becoming easily annoyed or irritable",
+            "Feeling afraid as if something awful might happen",
+            "Experiencing sudden moments of panic",
+            "Finding it difficult to focus due to constant worry"
+        ];
+
+        const options = [
+            { value: 0, text: "Not at all" },
+            { value: 1, text: "Several days" },
+            { value: 2, text: "More than half the days" },
+            { value: 3, text: "Nearly every day" }
+        ];
+
+        function loadQuestions() {
+            const form = document.getElementById("anxiety-test-form");
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                
+                questionDiv.innerHTML = `<p>${index + 1}. ${question}</p>`;
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+
+                options.forEach(option => {
+                    optionsDiv.innerHTML += `
+                        <input type="radio" name="q${index + 1}" value="${option.value}" id="q${index + 1}_${option.value}" required>
+                        <label for="q${index + 1}_${option.value}">${option.text}</label>
+                    `;
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                form.appendChild(questionDiv);
+            });
+
+            const submitButton = document.createElement("button");
+            submitButton.type = "submit";
+            submitButton.classList.add("submit-button");
+            submitButton.textContent = "Submit";
+            form.appendChild(submitButton);
+        }
+
+        function displayMentalHealthResult(score) {
+            const mentalStatus = document.getElementById("mental-status");
+            const statusLevel = document.getElementById("status-level");
+            const joke = document.getElementById("joke");
+            const quote = document.getElementById("quote");
+
+            let statusText = "";
+            let recommendation = "";
+            let jokeText = "";
+            let quoteText = "";
+
+            if (score >= 1 && score <= 4) {
+                statusText = "Minimal";
+                recommendation = "Your mental health appears stable, which is fantastic! Keep up activities that nurture your well-being, like connecting with friends, staying active, and enjoying your hobbies. Remember, even small moments of joy, like laughter or nature walks, help sustain positivity. Make time to relax and recharge—your mental wellness is worth the investment!";
+                jokeText = "Why did the tomato turn red? Because it saw the salad dressing! It was so embarrassed, it just couldn’t ‘ketchup’ to itself!";
+                quoteText = "\"Happiness is not by chance, but by choice.\" – Jim Rohn";
+            } else if (score >= 5 && score <= 9) {
+                statusText = "Mild";
+                recommendation = "You might be feeling a little anxious, which is perfectly okay. Spend some time doing things that make you feel relaxed, whether it’s listening to music, going for a walk, or enjoying a favorite hobby. Connecting with people who make you smile can also boost your mood. Remember, taking small steps towards self-care can have a big impact.";
+                jokeText = "Why did the bicycle fall over? Because it was two-tired! Just needed a wheel break. Life’s all about balance!";
+                quoteText = "\"Every day may not be good... but there’s something good in every day.\" – Alice Morse Earle";
+            } else if (score >= 10 && score <= 14) {
+                statusText = "Moderate";
+                recommendation = "Moderate anxiety can sometimes feel overwhelming. Incorporate activities that help you unwind, like deep breathing exercises, yoga, or spending time in nature. Having a routine can also help you feel grounded. Talking to friends or writing in a journal can be great outlets for relieving stress. Remember, one step at a time is all you need to keep moving forward.";
+                jokeText = "What do you call fake spaghetti? An impasta! It tried to noodle its way in, but everyone could tell it wasn’t the real deal!";
+                quoteText = "\"Believe you can and you're halfway there.\" – Theodore Roosevelt";
+            } else if (score >= 15 && score <= 19) {
+                statusText = "Moderately severe";
+                recommendation = "This level of anxiety can be tough, but support is available. Talking to someone close or a mental health professional can be a good starting point. Taking small breaks for yourself, whether through mindfulness, journaling, or a hobby you enjoy, can provide relief. Remember, prioritizing self-care—sleep, nutrition, and physical activity—can also make a difference. You’re not alone; seeking help is a strength.";
+                jokeText = "Why don’t skeletons fight each other? They don’t have the guts! Too ‘bone-headed’ to start trouble, anyway.";
+                quoteText = "\"It’s okay to not be okay, as long as you’re not giving up.\" – Karen Salmansohn";
+            } else if (score >= 20 && score <= 27) {
+                statusText = "Severe";
+                recommendation = "Severe anxiety can feel very intense and challenging. Reaching out for help, whether through a mental health professional or a supportive friend, is a courageous and positive step. Even small self-care actions, like deep breathing, listening to calming music, or finding a quiet place to journal, can bring some relief. Remember, you don’t have to face this alone—help is available, and taking the first step can be a turning point.";
+                jokeText = "Why did the coffee file a police report? Because it got mugged! It just wanted to espresso itself but ended up needing a latte support.";
+                quoteText = "\"You don’t have to control your thoughts. You just have to stop letting them control you.\" – Dan Millman";
+            }
+
+            mentalStatus.textContent = statusText;
+            statusLevel.textContent = recommendation;
+            joke.textContent = jokeText;
+            quote.textContent = quoteText;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let details = '';
+            const formElements = event.target.elements;
+
+            questions.forEach((_, i) => {
+                const selectedOption = formElements[`q${i + 1}`].value;
+                totalScore += parseInt(selectedOption);
+                details += `<p>Q${i + 1}: ${selectedOption}</p>`;
+            });
+
+            document.getElementById("test-section").classList.add("hidden");
+            document.getElementById("results-section").classList.remove("hidden");
+            document.getElementById("score-summary").innerText = `Your total score is: ${totalScore}`;
+            document.getElementById("score-details").innerHTML = details;
+
+            displayMentalHealthResult(totalScore);
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Test</title>
+    <link rel="stylesheet" href="str.css">
+</head>
+<body>
+    <div class="container">
+        <div id="test-section">
+            <h1>Stress Test</h1>
+            <p class="instructions">Over the last 2 weeks, how often have you been bothered by the following stress-related issues?</p>
+            <form id="stress-test-form" onsubmit="handleSubmit(event)">
+                <!-- JavaScript will generate questions here, including the submit button after the 9th question -->
+            </form>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <div id="score-summary"></div>
+            <div id="score-details"></div>
+            <div id="score-info">
+                <h2>About Your Score</h2>
+                <p>Each answer has a score of 0-3. Adding these provides your Total Score.</p>
+                <p><strong>Not at all = 0; Several days = 1; More than half the days = 2; Nearly every day = 3</strong></p>
+            
+                <h3>Interpreting Your Total Score</h3>
+                <ul>
+                    <li><strong>1-4:</strong> Minimal stress</li>
+                    <li><strong>5-9:</strong> Mild stress</li>
+                    <li><strong>10-14:</strong> Moderate stress</li>
+                    <li><strong>15-19:</strong> Moderately severe stress</li>
+                    <li><strong>20-27:</strong> Severe stress</li>
+                </ul>
+            </div>
+
+            <div class="result-box">
+                <h2>Your Stress Level: <span id="stress-level">Moderate</span></h2>
+                <p id="stress-recommendation">Take a break from your daily routine and engage in something enjoyable to ease your mind.</p>
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions for You</h2>
+                <ul>
+                    <li><strong>Joke of the Day:</strong> <span id="joke">Why don't we tell secrets on a farm? Because the potatoes have eyes and the corn has ears!</span></li>
+                    <li><strong>Read a Positive Quote:</strong> <span id="quote">"Sometimes the most productive thing you can do is relax." – Mark Black</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Feeling overwhelmed with responsibilities",
+            "Struggling to relax even during leisure time",
+            "Easily irritated or annoyed",
+            "Experiencing frequent headaches or muscle tension",
+            "Having difficulty concentrating",
+            "Feeling like there’s not enough time in the day",
+            "Feeling like minor problems are overly frustrating",
+            "Having trouble sleeping due to stress",
+            "Frequently worrying about the future"
+        ];
+
+        const options = [
+            { value: 0, text: "Not at all" },
+            { value: 1, text: "Several days" },
+            { value: 2, text: "More than half the days" },
+            { value: 3, text: "Nearly every day" }
+        ];
+
+        function loadQuestions() {
+            const form = document.getElementById("stress-test-form");
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                
+                questionDiv.innerHTML = `<p>${index + 1}. ${question}</p>`;
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+
+                options.forEach(option => {
+                    optionsDiv.innerHTML += `
+                        <input type="radio" name="q${index + 1}" value="${option.value}" id="q${index + 1}_${option.value}" required>
+                        <label for="q${index + 1}_${option.value}">${option.text}</label>
+                    `;
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                form.appendChild(questionDiv);
+            });
+
+            const submitButton = document.createElement("button");
+            submitButton.type = "submit";
+            submitButton.classList.add("submit-button");
+            submitButton.textContent = "Submit";
+            form.appendChild(submitButton);
+        }
+
+        function displayStressResult(score) {
+            const stressLevel = document.getElementById("stress-level");
+            const stressRecommendation = document.getElementById("stress-recommendation");
+            const joke = document.getElementById("joke");
+            const quote = document.getElementById("quote");
+
+            let levelText = "";
+            let recommendationText = "";
+            let jokeText = "";
+            let quoteText = "";
+
+            if (score >= 1 && score <= 4) {
+                levelText = "Minimal";
+                recommendationText = "Your stress level is low—keep up the good habits! Engage in calming activities, and enjoy your time with loved ones. Regularly practice mindfulness, and don't forget to celebrate your achievements. Staying relaxed helps you maintain this positive mindset.";
+                jokeText = "Why did the scarecrow win an award? He was outstanding in his field!";
+                quoteText = "\"The greatest weapon against stress is our ability to choose one thought over another.\" – William James";
+            } else if (score >= 5 && score <= 9) {
+                levelText = "Mild";
+                recommendationText = "You're handling things well, but occasional breaks can help. Try journaling or stretching, which can keep you grounded. Surround yourself with supportive people, and keep up the little joys that keep stress in check. A balanced life is a peaceful life!";
+                jokeText = "Why did the bicycle fall over? It was two-tired!";
+                quoteText = "\"Sometimes the most productive thing you can do is relax.\" – Mark Black";
+            } else if (score >= 10 && score <= 14) {
+                levelText = "Moderate";
+                recommendationText = "Your stress is at a manageable level. Consider adding daily relaxation time to your routine. Listen to music, read, or take a short walk to clear your mind. Recognize small victories, and prioritize what brings you peace. It’s okay to slow down now and then.";
+                jokeText = "I told my wife she was drawing her eyebrows too high. She looked surprised!";
+                quoteText = "\"Take rest; a field that has rested gives a bountiful crop.\" – Ovid";
+            } else if (score >= 15 && score <= 19) {
+                levelText = "Moderately Severe";
+                recommendationText = "This level of stress calls for extra care. Talk to someone, set manageable goals, and focus on activities that genuinely help you unwind. Building healthy habits gradually can reduce stress. Remember, you don't have to face this alone; support is here for you.";
+                jokeText = "Why don’t skeletons fight each other? They don’t have the guts!";
+                quoteText = "\"It’s not stress that kills us, it is our reaction to it.\" – Hans Selye";
+            } else if (score >= 20 && score <= 27) {
+                levelText = "Severe";
+                recommendationText = "It seems you're carrying a heavy stress load. Consider reaching out to a mental health professional for guidance. Support from loved ones can also be helpful. Remember, you’re not alone, and taking steps to address stress shows great strength and courage.";
+                jokeText = "Why did the tomato turn red? Because it saw the salad dressing!";
+                quoteText = "\"Stress is the trash of modern life; if not managed, it will pile up and overtake you.\" – Danzae Pace";
+            }
+
+            stressLevel.textContent = levelText;
+            stressRecommendation.textContent = recommendationText;
+            joke.textContent = jokeText;
+            quote.textContent = quoteText;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let details = '';
+            const formElements = event.target.elements;
+
+            questions.forEach((_, i) => {
+                const selectedOption = formElements[`q${i + 1}`].value;
+                totalScore += parseInt(selectedOption);
+                details += `<p>Q${i + 1}: ${selectedOption}</p>`;
+            });
+
+            document.getElementById("test-section").classList.add("hidden");
+            document.getElementById("results-section").classList.remove("hidden");
+            document.getElementById("score-summary").innerText = `Your total score is: ${totalScore}`;
+            document.getElementById("score-details").innerHTML = details;
+
+            displayStressResult(totalScore);
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>

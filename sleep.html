@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Test</title>
+    <link rel="stylesheet" href="sle.css">
+</head>
+<body>
+    <div class="container">
+        <div id="test-section">
+            <h1>Sleep Test</h1>
+            <p class="instructions">Over the last 2 weeks, how often have you experienced the following sleep-related issues?</p>
+            <form id="sleep-test-form" onsubmit="handleSubmit(event)">
+                <!-- JavaScript will generate questions here, including the submit button after the 9th question -->
+            </form>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <div id="score-summary"></div>
+            <div id="score-details"></div>
+            <div id="score-info">
+                <h2>About Your Score</h2>
+                <p>Each answer has a score of 0-3. Adding these provides your Total Score.</p>
+                <p><strong>Not at all = 0; Several days = 1; More than half the days = 2; Nearly every day = 3</strong></p>
+            
+                <h3>Interpreting Your Total Score</h3>
+                <ul>
+                    <li><strong>1-4:</strong> Minimal sleep issues</li>
+                    <li><strong>5-9:</strong> Mild sleep issues</li>
+                    <li><strong>10-14:</strong> Moderate sleep issues</li>
+                    <li><strong>15-19:</strong> Moderately severe sleep issues</li>
+                    <li><strong>20-27:</strong> Severe sleep issues</li>
+                </ul>
+            </div>
+
+            <div class="result-box">
+                <h2>Your Sleep Health: <span id="sleep-level">Moderate</span></h2>
+                <p id="sleep-recommendation">Consider adjusting your bedtime routine for better rest and relaxation.</p>
+            </div>
+
+            <div class="suggestions">
+                <h2>Suggestions for You</h2>
+                <ul>
+                    <li><strong>Joke of the Day:</strong> <span id="joke">I told my bed we’re breaking up tonight… it’ll be hard to leave it in the morning!</span></li>
+                    <li><strong>Read a Positive Quote:</strong> <span id="quote">"Sleep is the best meditation." – Dalai Lama</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Difficulty falling asleep at night",
+            "Waking up multiple times during the night",
+            "Feeling tired even after a full night's sleep",
+            "Difficulty staying awake during the day",
+            "Having irregular sleep patterns",
+            "Experiencing restless or disturbed sleep",
+            "Relying on caffeine or other stimulants to stay awake",
+            "Feeling drowsy or unfocused during the day",
+            "Difficulty waking up on time in the morning"
+        ];
+
+        const options = [
+            { value: 0, text: "Not at all" },
+            { value: 1, text: "Several days" },
+            { value: 2, text: "More than half the days" },
+            { value: 3, text: "Nearly every day" }
+        ];
+
+        function loadQuestions() {
+            const form = document.getElementById("sleep-test-form");
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                
+                questionDiv.innerHTML = `<p>${index + 1}. ${question}</p>`;
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+
+                options.forEach(option => {
+                    optionsDiv.innerHTML += `
+                        <input type="radio" name="q${index + 1}" value="${option.value}" id="q${index + 1}_${option.value}" required>
+                        <label for="q${index + 1}_${option.value}">${option.text}</label>
+                    `;
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                form.appendChild(questionDiv);
+            });
+
+            const submitButton = document.createElement("button");
+            submitButton.type = "submit";
+            submitButton.classList.add("submit-button");
+            submitButton.textContent = "Submit";
+            form.appendChild(submitButton);
+        }
+
+        function displaySleepResult(score) {
+            const sleepLevel = document.getElementById("sleep-level");
+            const sleepRecommendation = document.getElementById("sleep-recommendation");
+            const joke = document.getElementById("joke");
+            const quote = document.getElementById("quote");
+
+            let levelText = "";
+            let recommendationText = "";
+            let jokeText = "";
+            let quoteText = "";
+
+            if (score >= 1 && score <= 4) {
+                levelText = "Minimal";
+                recommendationText = "Your sleep health is good! Keep following a consistent sleep routine, and avoid screens before bed. Spending time relaxing before bed, like reading or listening to calm music, can help you maintain this balance. Remember to give yourself time to unwind and rest.";
+                jokeText = "I’m reading a book on anti-gravity. It’s impossible to put down!";
+                quoteText = "\"The best bridge between despair and hope is a good night's sleep.\" – E. Joseph Cossman";
+            } else if (score >= 5 && score <= 9) {
+                levelText = "Mild";
+                recommendationText = "Your sleep could benefit from small adjustments. Consider a calm bedtime routine and limit caffeine intake. Even a short evening walk can help prepare your body for rest. A few adjustments can make a big difference in the quality of your sleep. Relax and rest easy!";
+                jokeText = "Why did the coffee file a police report? It got mugged!";
+                quoteText = "\"Sleep is the golden chain that ties health and our bodies together.\" – Thomas Dekker";
+            } else if (score >= 10 && score <= 14) {
+                levelText = "Moderate";
+                recommendationText = "Sleep challenges can be frustrating, but taking time to wind down and set a consistent bedtime can help. Try avoiding bright lights and screens before bed. Take slow, deep breaths to calm your mind. A comfortable, quiet sleep environment is also key for restful nights.";
+                jokeText = "I dreamt I was a muffler last night... I woke up exhausted!";
+                quoteText = "\"A good laugh and a long sleep are the best cures in the doctor’s book.\" – Irish Proverb";
+            } else if (score >= 15 && score <= 19) {
+                levelText = "Moderately Severe";
+                recommendationText = "Sleep is becoming a significant concern. Consider creating a structured routine, limiting caffeine, and reaching out for support if needed. Guided relaxation or gentle music can help you drift off. Making a few changes may provide the rest you need for better days.";
+                jokeText = "Why don’t scientists trust atoms? Because they make up everything!";
+                quoteText = "\"Sleep is the best meditation.\" – Dalai Lama";
+            } else if (score >= 20 && score <= 27) {
+                levelText = "Severe";
+                recommendationText = "This level of sleep difficulty requires extra attention. Consider consulting a healthcare provider for advice on managing sleep. A warm bath, dim lighting, or relaxing scents may also help you unwind. Sleep is essential, and there’s support available to help you find restful nights.";
+                jokeText = "Why did the tomato blush? It saw the salad dressing!";
+                quoteText = "\"Put yourself on the top of your to-do list every single day and the rest will fall into place.\" – Unknown";
+            }
+
+            sleepLevel.textContent = levelText;
+            sleepRecommendation.textContent = recommendationText;
+            joke.textContent = jokeText;
+            quote.textContent = quoteText;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            let totalScore = 0;
+            let details = '';
+            const formElements = event.target.elements;
+
+            questions.forEach((_, i) => {
+                const selectedOption = formElements[`q${i + 1}`].value;
+                totalScore += parseInt(selectedOption);
+                details += `<p>Q${i + 1}: ${selectedOption}</p>`;
+            });
+
+            document.getElementById("test-section").classList.add("hidden");
+            document.getElementById("results-section").classList.remove("hidden");
+            document.getElementById("score-summary").innerText = `Your total score is: ${totalScore}`;
+            document.getElementById("score-details").innerHTML = details;
+
+            displaySleepResult(totalScore);
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>
